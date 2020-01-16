@@ -1,0 +1,37 @@
+{
+  "name": "test-hk",
+  "version": "0.1.0",
+  "description": "test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Angel Hurtado (@angelxehg)",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.19.0",
+    "connect-multiparty": "^2.2.0",
+    "express": "^4.17.1",
+    "jwt-simple": "^0.5.6",
+    "moment": "^2.24.0",
+    "mongoose": "^5.8.7",
+    "mongoose-pagination": "^1.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angelxehg/test-hk.git"
+  },
+  "keywords": [
+    "test",
+    "nodejs",
+    "express"
+  ],
+  "bugs": {
+    "url": "https://github.com/angelxehg/test-hk/issues"
+  },
+  "homepage": "https://github.com/angelxehg/test-hk#readme"
+}
