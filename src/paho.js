@@ -14,7 +14,7 @@ function onConnect() {
     // Once a connection has been made, make a subscription and send a message.
     console.log("onConnect");
     client.subscribe("proyecto/#");
-    message = new Paho.MQTT.Message("Hello Angel!");
+    message = new Paho.MQTT.Message('{ "type":"message", "message":"Hello Angel!"}');
     message.destinationName = "proyecto";
     client.send(message);
 }
@@ -28,9 +28,21 @@ function onConnectionLost(responseObject) {
 
 // called when a message arrives
 function onMessageArrived(message) {
-    console.log("onMessageArrived:" + message.payloadString);
+    try {
+        var msg = JSON.parse(message.payloadString);
+        if (msg.type == 'heartbeat') {
+            console.log(msg);
+        } else {
+            createRow(msg.message);
+        }
+    } catch (error) {
+        console.log(message.payloadString);
+    }
+}
+
+function createRow(message) {
     var table = document.getElementById("mensajes");
     var row = table.insertRow(0);
     var cell = row.insertCell(0);
-    cell.innerHTML = message.payloadString;
+    cell.innerHTML = message;
 }
