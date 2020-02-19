@@ -14,7 +14,7 @@ function onConnect() {
     // Once a connection has been made, make a subscription and send a message.
     console.log("onConnect");
     client.subscribe("proyecto/#");
-    message = new Paho.MQTT.Message('{ "type":"message", "message":"Hello Angel!"}');
+    message = new Paho.MQTT.Message('{ "type":"message", "message":"Hello Angel!", "time":1582150368}');
     message.destinationName = "proyecto";
     client.send(message);
 }
@@ -28,19 +28,37 @@ function onConnectionLost(responseObject) {
 
 // called when a message arrives
 function onMessageArrived(message) {
+    console.log(message.payloadString);
     try {
         var msg = JSON.parse(message.payloadString);
         if (msg.type == 'heartbeat') {
-            console.log(msg);
+            createRow("Heartbeat at " + getDate(msg.time));
         } else {
-            createRow(msg.message);
+            createRow(msg.message + " at " + getDate(msg.time));
         }
     } catch (error) {
-        console.log(message.payloadString);
+        console.log("Can't parse string!");
     }
 }
 
 function createRow(message) {
     var list = document.getElementById("mensajes");
     list.innerHTML += "<li class='list-group-item'>" + message + "</li>";
+}
+
+function getDate(timestamp) {
+    try {
+        var a = new Date(timestamp * 1000);
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var year = a.getFullYear();
+        var month = months[a.getMonth()];
+        var date = a.getDate();
+        var hour = a.getHours();
+        var min = a.getMinutes();
+        var sec = a.getSeconds();
+        var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec;
+        return time;
+    } catch (error) {
+        return "";
+    }
 }
