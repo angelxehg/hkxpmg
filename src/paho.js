@@ -41,8 +41,6 @@ function onMessageArrived(message) {
 }
 
 function createRow(message) {
-    var table = document.getElementById("mensajes");
-    var row = table.insertRow(0);
-    var cell = row.insertCell(0);
-    cell.innerHTML = message;
+    var list = document.getElementById("mensajes");
+    list.innerHTML += "<li class='list-group-item'>" + message + "</li>";
 }
