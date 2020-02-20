@@ -42,7 +42,7 @@ function onMessageArrived(message) {
 }
 
 function createRow(message) {
-    var list = document.getElementById("mensajes");
+    var list = document.getElementById("denied-list");
     list.innerHTML += "<li class='list-group-item'>" + message + "</li>";
 }
 
