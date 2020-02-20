@@ -4,7 +4,7 @@
   "description": "test",
   "main": "index.js",
   "scripts": {
-    "serve": "live-server --port=8000 --host=10.0.2.15"
+    "serve": "live-server --port=8000"
   },
   "author": "Angel Hurtado (@angelxehg)",
   "license": "MIT",
