@@ -1,32 +1,34 @@
+function connect() {
+    client = new Paho.MQTT.Client("64.227.94.40", 8083, "");
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
+    client.connect({ onSuccess: onConnect });
+}
 
-client = new Paho.MQTT.Client("64.227.94.40", 8083, "");
-// set callback handlers
-client.onConnectionLost = onConnectionLost;
-client.onMessageArrived = onMessageArrived;
-// connect the client
-client.connect({ onSuccess: onConnect });
-// called when the client connects
 function onConnect() {
     statusOnHolding();
     client.subscribe("proyecto/#");
 }
 
 function statusOnHolding() {
-    document.getElementById("mqtt").classList.add('btn-warning');
-    document.getElementById("mqtt").classList.remove('btn-success');
-    document.getElementById("mqtt").classList.remove('btn-danger');
+    document.getElementById("status").innerHTML = "Esperando...";
+    document.getElementById("status").classList.add('btn-warning');
+    document.getElementById("status").classList.remove('btn-success');
+    document.getElementById("status").classList.remove('btn-danger');
 }
 
 function statusOnConnected() {
-    document.getElementById("mqtt").classList.remove('btn-warning');
-    document.getElementById("mqtt").classList.add('btn-success');
-    document.getElementById("mqtt").classList.remove('btn-danger');
+    document.getElementById("status").innerHTML = "Conectado";
+    document.getElementById("status").classList.remove('btn-warning');
+    document.getElementById("status").classList.add('btn-success');
+    document.getElementById("status").classList.remove('btn-danger');
 }
 
 function statusOnClosed() {
-    document.getElementById("mqtt").classList.remove('btn-warning');
-    document.getElementById("mqtt").classList.remove('btn-success');
-    document.getElementById("mqtt").classList.add('btn-danger');
+    document.getElementById("status").innerHTML = "Desconectado";
+    document.getElementById("status").classList.remove('btn-warning');
+    document.getElementById("status").classList.remove('btn-success');
+    document.getElementById("status").classList.add('btn-danger');
 }
 
 // called when the client loses its connection
@@ -72,3 +74,5 @@ function convertTime(time) {
     var formattedTime = Anio + '-' + Mes + '-' + Dia + ' ' + Hora + ':' + Minuto.substr(-2) + ':' + Segundo.substr(-2);
     return formattedTime;
 }
+
+this.connect();
