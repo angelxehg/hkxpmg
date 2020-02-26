@@ -7,20 +7,30 @@ client.onMessageArrived = onMessageArrived;
 client.connect({ onSuccess: onConnect });
 // called when the client connects
 function onConnect() {
-    document.getElementById("mqtt").classList.remove('btn-danger');
-    document.getElementById("mqtt").classList.add('btn-success');
+    setBtnDanger("mqtt");
+    setBtnSuccess("mqtt");
     // Once a connection has been made, make a subscription and send a message.
     console.log("onConnect");
 
     client.subscribe("proyecto/#");
 }
 
+function setBtnDanger(objectName) {
+    document.getElementById(objectName).classList.remove('btn-success');
+    document.getElementById(objectName).classList.add('btn-danger');
+}
+
+function setBtnSuccess(objectName) {
+    document.getElementById(objectName).classList.remove('btn-danger');
+    document.getElementById(objectName).classList.add('btn-success');
+}
+
 // called when the client loses its connection
 function onConnectionLost(responseObject) {
     if (responseObject.errorCode !== 0) {
         console.log("onConnectionLost:" + responseObject.errorMessage);
-        document.getElementById("mqtt").classList.remove('btn-success');
-        document.getElementById("mqtt").classList.add('btn-danger');
+        setBtnSuccess("mqtt");
+        setBtnDanger("mqtt");
     }
 }
 // called when a message arrives
@@ -46,9 +56,7 @@ function onMessageArrived(message) {
 
 function online(time) {
     //modificar el estilo del elemento mediante la clase
-    document.getElementById("status").classList.remove('btn-danger');
-    document.getElementById("status").classList.add('btn-success');
-
+    setBtnSuccess("status");
     let unix_timestamp = time;
     var date = new Date(unix_timestamp * 1000);
     var Anio = date.getFullYear();
