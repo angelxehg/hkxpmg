@@ -35,23 +35,23 @@ function onConnectionLost(responseObject) {
 }
 // called when a message arrives
 function onMessageArrived(message) {
-    console.log(message.payloadString);
-    var json = $.parseJSON(message.payloadString);
-
-    if (json.type.localeCompare("heartbeat") == 0) {
-        online(json.time);
-    }
-    if (json.type.localeCompare("access") == 0) {
-        if (json.isKnow) {
-            //Credencial Conocida
-            createRowOn("denied_list", "Known access at " + convertTime(json.time))
-        } else {
-            //Credencial Desconocida
-            createRowOn("allowed_list", "Unknown access at " + convertTime(json.time))
+    try {
+        var json = $.parseJSON(message.payloadString);
+        if (json.type.localeCompare("heartbeat") == 0) {
+            online(json.time);
         }
+        if (json.type.localeCompare("access") == 0) {
+            if (json.isKnow) {
+                //Credencial Conocida
+                createRowOn("denied_list", "Known access at " + convertTime(json.time))
+            } else {
+                //Credencial Desconocida
+                createRowOn("allowed_list", "Unknown access at " + convertTime(json.time))
+            }
+        }
+    } catch (error) {
+        console.log(message.payloadString);
     }
-
-
 }
 
 function createRowOn(element, message) {
