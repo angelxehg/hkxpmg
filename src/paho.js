@@ -11,6 +11,8 @@ client.connect({ onSuccess: onConnect });
 
 // called when the client connects
 function onConnect() {
+    addClass("btn-success", "mqtt");
+    removeClass("btn-danger", "mqtt");
     // Once a connection has been made, make a subscription and send a message.
     console.log("onConnect");
     client.subscribe("proyecto/#");
@@ -24,6 +26,8 @@ function onConnectionLost(responseObject) {
     if (responseObject.errorCode !== 0) {
         console.log("onConnectionLost:" + responseObject.errorMessage);
     }
+    addClass("btn-danger", "mqtt");
+    removeClass("btn-success", "mqtt");
 }
 
 // called when a message arrives
@@ -33,12 +37,23 @@ function onMessageArrived(message) {
         var msg = JSON.parse(message.payloadString);
         if (msg.type == 'heartbeat') {
             createRow("Heartbeat at " + getDate(msg.time));
-        } else {
-            createRow(msg.message + " at " + getDate(msg.time));
+        }
+        if (msg.type == 'access') {
+            createRow("Access at " + getDate(msg.time));
         }
     } catch (error) {
         console.log("Can't parse string!");
     }
+}
+
+function addClass(new_class, to) {
+    var element = document.getElementById(to);
+    element.classList.add(new_class);
+}
+
+function removeClass(new_class, from) {
+    var element = document.getElementById(from);
+    element.classList.remove(new_class);
 }
 
 function createRow(message) {
