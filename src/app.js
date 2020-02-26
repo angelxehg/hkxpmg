@@ -44,14 +44,19 @@ function onMessageArrived(message) {
     if (json.type.localeCompare("access") == 0) {
         if (json.isKnow) {
             //Credencial Conocida
-            alert("Bienvenido");
+            createRowOn("denied_list", "OK")
         } else {
             //Credencial Desconocida
-            alert("Peligro");
+            createRowOn("allowed_list", "NO")
         }
     }
 
 
+}
+
+function createRowOn(element, message) {
+    var list = document.getElementById(element);
+    list.innerHTML += "<li class='list-group-item'>" + message + "</li>";
 }
 
 function online(time) {
