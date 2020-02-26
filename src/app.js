@@ -7,30 +7,33 @@ client.onMessageArrived = onMessageArrived;
 client.connect({ onSuccess: onConnect });
 // called when the client connects
 function onConnect() {
-    setBtnDanger("mqtt");
-    setBtnSuccess("mqtt");
-    // Once a connection has been made, make a subscription and send a message.
-    console.log("onConnect");
-
+    statusOnHolding();
     client.subscribe("proyecto/#");
 }
 
-function setBtnDanger(objectName) {
-    document.getElementById(objectName).classList.remove('btn-success');
-    document.getElementById(objectName).classList.add('btn-danger');
+function statusOnHolding() {
+    document.getElementById("mqtt").classList.add('btn-warning');
+    document.getElementById("mqtt").classList.remove('btn-success');
+    document.getElementById("mqtt").classList.remove('btn-danger');
 }
 
-function setBtnSuccess(objectName) {
-    document.getElementById(objectName).classList.remove('btn-danger');
-    document.getElementById(objectName).classList.add('btn-success');
+function statusOnConnected() {
+    document.getElementById("mqtt").classList.remove('btn-warning');
+    document.getElementById("mqtt").classList.add('btn-success');
+    document.getElementById("mqtt").classList.remove('btn-danger');
+}
+
+function statusOnClosed() {
+    document.getElementById("mqtt").classList.remove('btn-warning');
+    document.getElementById("mqtt").classList.remove('btn-success');
+    document.getElementById("mqtt").classList.add('btn-danger');
 }
 
 // called when the client loses its connection
 function onConnectionLost(responseObject) {
     if (responseObject.errorCode !== 0) {
         console.log("onConnectionLost:" + responseObject.errorMessage);
-        setBtnSuccess("mqtt");
-        setBtnDanger("mqtt");
+        statusOnClosed();
     }
 }
 // called when a message arrives
@@ -38,14 +41,12 @@ function onMessageArrived(message) {
     try {
         var json = $.parseJSON(message.payloadString);
         if (json.type.localeCompare("heartbeat") == 0) {
-            online(json.time);
+            statusOnConnected();
         }
         if (json.type.localeCompare("access") == 0) {
             if (json.isKnow) {
-                //Credencial Conocida
                 createRowOn("denied_list", "Known access at " + convertTime(json.time))
             } else {
-                //Credencial Desconocida
                 createRowOn("allowed_list", "Unknown access at " + convertTime(json.time))
             }
         }
@@ -70,9 +71,4 @@ function convertTime(time) {
     var Segundo = "0" + date.getSeconds();
     var formattedTime = Anio + '-' + Mes + '-' + Dia + ' ' + Hora + ':' + Minuto.substr(-2) + ':' + Segundo.substr(-2);
     return formattedTime;
-}
-
-function online(time) {
-    //modificar el estilo del elemento mediante la clase
-    setBtnSuccess("status");
 }
