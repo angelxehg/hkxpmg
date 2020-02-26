@@ -13,9 +13,24 @@
 </head>
 
 <body>
-    <button id="status" type="button" class="btn btn-danger">Dispositivo</button>
-    <button id="mqtt" type="button" class="btn btn-danger">Mqtt</button>
-    <p id="demo"></p>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">MQTT</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <form class="form-inline">
+            <button id="status" class="btn btn-danger my-2 my-sm-0" type="submit">Dispositivo</button>
+            <button id="mqtt" class="btn btn-danger my-2 my-sm-0" type="submit">Mqtt</button>
+        </form>
+    </nav>
+
+    <div class="container-fluid">
+        <h3 style="margin-top: 15px;">Denegado:</h3>
+        <ul id="denied-list" class="list-group" style="max-width: 500px;"></ul>
+        <h3 style="margin-top: 15px;">Permitido:</h3>
+        <ul id="allowed-list" class="list-group" style="max-width: 500px;"></ul>
+    </div>
 </body>
 
 </html>

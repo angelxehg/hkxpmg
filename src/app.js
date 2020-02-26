@@ -58,5 +58,4 @@ function online(time) {
     var Minuto = "0" + date.getMinutes();
     var Segundo = "0" + date.getSeconds();
     var formattedTime = Anio + '-' + Mes + '-' + Dia + ' ' + Hora + ':' + Minuto.substr(-2) + ':' + Segundo.substr(-2);
-    document.getElementById("demo").innerHTML = formattedTime;
 }
