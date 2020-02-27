@@ -1,10 +1,13 @@
 var lastHeartbeat = null;
+var begin = new Date();
+var attempts = 0;
 
 function connect() {
     client = new Paho.MQTT.Client("64.227.94.40", 8083, "");
     client.onConnectionLost = onConnectionLost;
     client.onMessageArrived = onMessageArrived;
     client.connect({ onSuccess: onConnect });
+    console.log("Connected!");
 }
 
 function sampleHeartbeat() {
@@ -15,9 +18,16 @@ function sampleHeartbeat() {
 
 function onConnect() {
     setStatusAsConnected("server");
-    setStatusAsClosed("device");
+    setStatusAsWaiting("device");
     client.subscribe("proyecto/#");
+    attempts = 0;
     // sampleHeartbeat();
+}
+
+function setStatusAsWaiting(element) {
+    document.getElementById(element).classList.add('btn-warning');
+    document.getElementById(element).classList.remove('btn-success');
+    document.getElementById(element).classList.remove('btn-danger');
 }
 
 function setStatusAsConnected(element) {
@@ -36,6 +46,14 @@ function setStatusAsClosed(element) {
 function onConnectionLost(responseObject) {
     if (responseObject.errorCode !== 0) {
         console.log("onConnectionLost:" + responseObject.errorMessage);
+    }
+    if (attempts < 3) {
+        connect();
+        setStatusAsWaiting("server");
+        setStatusAsWaiting("device");
+        attempts++;
+        console.log("Attempt to reconnect " + attempts);
+    } else {
         setStatusAsClosed("server");
         setStatusAsClosed("device");
     }
@@ -46,6 +64,7 @@ function onMessageArrived(message) {
         var json = $.parseJSON(message.payloadString);
         if (json.type.localeCompare("heartbeat") == 0) {
             lastHeartbeat = convertTime(json.time);
+            console.log("Heartbeat!")
         }
         if (json.type.localeCompare("access") == 0) {
             if (json.isKnow) {
@@ -86,10 +105,18 @@ function formatedDate(date) {
 function checkDevice() {
     var current = new Date();
     var dif = current - this.lastHeartbeat;
-    if (dif > 45000) {
-        setStatusAsClosed("device");
-    } else {
+    if (dif < 30000) {
         setStatusAsConnected("device");
+    } else {
+        if (dif < 60000) {
+            setStatusAsWaiting("device");
+        } else {
+            if ((current - this.begin) < 60000) {
+                setStatusAsWaiting("device");
+            } else {
+                setStatusAsClosed("device");
+            }
+        }
     }
 }
 
