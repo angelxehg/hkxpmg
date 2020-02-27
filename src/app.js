@@ -7,6 +7,7 @@ function connect() {
     client.onConnectionLost = onConnectionLost;
     client.onMessageArrived = onMessageArrived;
     client.connect({ onSuccess: onConnect });
+    console.log("Connected!");
 }
 
 function sampleHeartbeat() {
@@ -63,6 +64,7 @@ function onMessageArrived(message) {
         var json = $.parseJSON(message.payloadString);
         if (json.type.localeCompare("heartbeat") == 0) {
             lastHeartbeat = convertTime(json.time);
+            console.log("Heartbeat!")
         }
         if (json.type.localeCompare("access") == 0) {
             if (json.isKnow) {
@@ -103,12 +105,18 @@ function formatedDate(date) {
 function checkDevice() {
     var current = new Date();
     var dif = current - this.lastHeartbeat;
-    if (dif > 45000) {
-        if ((current - this.begin) > 60000) {
-            setStatusAsClosed("device");
-        }
-    } else {
+    if (dif < 30000) {
         setStatusAsConnected("device");
+    } else {
+        if (dif < 60000) {
+            setStatusAsWaiting("device");
+        } else {
+            if ((current - this.begin) < 60000) {
+                setStatusAsWaiting("device");
+            } else {
+                setStatusAsClosed("device");
+            }
+        }
     }
 }
 
