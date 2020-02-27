@@ -1,4 +1,5 @@
 var lastHeartbeat = null;
+var begin = new Date();
 var attempts = 0;
 
 function connect() {
@@ -103,7 +104,9 @@ function checkDevice() {
     var current = new Date();
     var dif = current - this.lastHeartbeat;
     if (dif > 45000) {
-        setStatusAsClosed("device");
+        if ((current - this.begin) > 60000) {
+            setStatusAsClosed("device");
+        }
     } else {
         setStatusAsConnected("device");
     }
