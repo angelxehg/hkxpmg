@@ -1,4 +1,5 @@
 var lastHeartbeat = null;
+var attempts = 0;
 
 function connect() {
     client = new Paho.MQTT.Client("64.227.94.40", 8083, "");
@@ -17,6 +18,7 @@ function onConnect() {
     setStatusAsConnected("server");
     setStatusAsWaiting("device");
     client.subscribe("proyecto/#");
+    attempts = 0;
     // sampleHeartbeat();
 }
 
@@ -42,6 +44,14 @@ function setStatusAsClosed(element) {
 function onConnectionLost(responseObject) {
     if (responseObject.errorCode !== 0) {
         console.log("onConnectionLost:" + responseObject.errorMessage);
+    }
+    if (attempts < 3) {
+        connect();
+        setStatusAsWaiting("server");
+        setStatusAsWaiting("device");
+        attempts++;
+        console.log("Attempt to reconnect " + attempts);
+    } else {
         setStatusAsClosed("server");
         setStatusAsClosed("device");
     }
