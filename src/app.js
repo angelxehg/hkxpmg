@@ -8,7 +8,7 @@ function connect() {
 }
 
 function sampleHeartbeat() {
-    message = new Paho.MQTT.Message('{"type":"heartbeat", "time":1582820388}');
+    message = new Paho.MQTT.Message('{"type":"heartbeat", "time":1582822313}');
     message.destinationName = "proyecto";
     client.send(message);
 }
@@ -45,13 +45,15 @@ function onMessageArrived(message) {
     try {
         var json = $.parseJSON(message.payloadString);
         if (json.type.localeCompare("heartbeat") == 0) {
-            lastHeartbeat = new Date();
+            lastHeartbeat = convertTime(json.time);
         }
         if (json.type.localeCompare("access") == 0) {
             if (json.isKnow) {
-                createRowOn("denied_list", "Known access at " + convertTime(json.time))
+                var date = convertTime(json.time);
+                createRowOn("denied_list", "Known access at " + formatedDate(date))
             } else {
-                createRowOn("allowed_list", "Unknown access at " + convertTime(json.time))
+                var date = convertTime(json.time);
+                createRowOn("allowed_list", "Unknown access at " + formatedDate(date))
             }
         }
     } catch (error) {
@@ -67,14 +69,7 @@ function createRowOn(element, message) {
 function convertTime(time) {
     let unix_timestamp = time;
     var date = new Date(unix_timestamp * 1000);
-    var Anio = date.getFullYear();
-    var Mes = date.getMonth();
-    var Dia = date.getDate();
-    var Hora = date.getHours();
-    var Minuto = "0" + date.getMinutes();
-    var Segundo = "0" + date.getSeconds();
-    var formattedTime = Anio + '-' + Mes + '-' + Dia + ' ' + Hora + ':' + Minuto.substr(-2) + ':' + Segundo.substr(-2);
-    return formattedTime;
+    return date;
 }
 
 function formatedDate(date) {
@@ -91,7 +86,7 @@ function formatedDate(date) {
 function checkDevice() {
     var current = new Date();
     var dif = current - this.lastHeartbeat;
-    if (dif > 30000) {
+    if (dif > 45000) {
         setStatusAsClosed("device");
     } else {
         setStatusAsConnected("device");
