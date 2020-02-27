@@ -14,37 +14,30 @@ function sampleHeartbeat() {
 }
 
 function onConnect() {
-    statusOnHolding();
+    setStatusAsConnected("server");
+    setStatusAsClosed("device");
     client.subscribe("proyecto/#");
-    sampleHeartbeat();
+    // sampleHeartbeat();
 }
 
-function statusOnHolding() {
-    document.getElementById("status").innerHTML = "Esperando...";
-    document.getElementById("status").classList.add('btn-warning');
-    document.getElementById("status").classList.remove('btn-success');
-    document.getElementById("status").classList.remove('btn-danger');
+function setStatusAsConnected(element) {
+    document.getElementById(element).classList.remove('btn-warning');
+    document.getElementById(element).classList.add('btn-success');
+    document.getElementById(element).classList.remove('btn-danger');
 }
 
-function statusOnConnected() {
-    document.getElementById("status").innerHTML = "Conectado";
-    document.getElementById("status").classList.remove('btn-warning');
-    document.getElementById("status").classList.add('btn-success');
-    document.getElementById("status").classList.remove('btn-danger');
-}
-
-function statusOnClosed() {
-    document.getElementById("status").innerHTML = "Desconectado";
-    document.getElementById("status").classList.remove('btn-warning');
-    document.getElementById("status").classList.remove('btn-success');
-    document.getElementById("status").classList.add('btn-danger');
+function setStatusAsClosed(element) {
+    document.getElementById(element).classList.remove('btn-warning');
+    document.getElementById(element).classList.remove('btn-success');
+    document.getElementById(element).classList.add('btn-danger');
 }
 
 // called when the client loses its connection
 function onConnectionLost(responseObject) {
     if (responseObject.errorCode !== 0) {
         console.log("onConnectionLost:" + responseObject.errorMessage);
-        statusOnClosed();
+        setStatusAsClosed("server");
+        setStatusAsClosed("device");
     }
 }
 // called when a message arrives
@@ -98,11 +91,10 @@ function formatedDate(date) {
 function checkDevice() {
     var current = new Date();
     var dif = current - this.lastHeartbeat;
-    console.log("Last heartbeat " + dif + "ms ago");
     if (dif > 30000) {
-        statusOnHolding();
+        setStatusAsClosed("device");
     } else {
-        statusOnConnected();
+        setStatusAsConnected("device");
     }
 }
 
