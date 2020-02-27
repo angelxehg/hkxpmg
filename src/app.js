@@ -15,9 +15,15 @@ function sampleHeartbeat() {
 
 function onConnect() {
     setStatusAsConnected("server");
-    setStatusAsClosed("device");
+    setStatusAsWaiting("device");
     client.subscribe("proyecto/#");
     // sampleHeartbeat();
+}
+
+function setStatusAsWaiting(element) {
+    document.getElementById(element).classList.add('btn-warning');
+    document.getElementById(element).classList.remove('btn-success');
+    document.getElementById(element).classList.remove('btn-danger');
 }
 
 function setStatusAsConnected(element) {
