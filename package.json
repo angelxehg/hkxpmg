@@ -1,10 +1,10 @@
 {
-  "name": "test-hk",
+  "name": "hkxpmg",
   "version": "0.1.0",
   "description": "test",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "live-server --port=8000"
   },
   "author": "Angel Hurtado (@angelxehg)",
   "license": "MIT",
@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/angelxehg/test-hk.git"
+    "url": "git+https://github.com/angelxehg/hkxpmg.git"
   },
   "keywords": [
     "test",
