@@ -63,16 +63,22 @@ function onMessageArrived(message) {
     try {
         var json = $.parseJSON(message.payloadString);
         if (json.type.localeCompare("heartbeat") == 0) {
-            lastHeartbeat = convertTime(json.time);
-            console.log("Heartbeat!")
+            var date = convertTime(json.time);
+            lastHeartbeat = date;
+            var msg = "Heartbeat at " + formatedDate(date);
+            console.log(msg);
         }
         if (json.type.localeCompare("access") == 0) {
             if (json.isKnow) {
                 var date = convertTime(json.time);
-                createRowOn("denied_list", "Known access at " + formatedDate(date))
+                var msg = "Known access at " + formatedDate(date);
+                console.log(msg);
+                createRowOn("denied_list", msg);
             } else {
                 var date = convertTime(json.time);
-                createRowOn("allowed_list", "Unknown access at " + formatedDate(date))
+                var msg = "Denied access at " + formatedDate(date);
+                console.log(msg);
+                createRowOn("allowed_list", msg);
             }
         }
     } catch (error) {
@@ -87,7 +93,7 @@ function createRowOn(element, message) {
 
 function convertTime(time) {
     let unix_timestamp = time;
-    var date = new Date(unix_timestamp * 1000);
+    var date = new Date(unix_timestamp);
     return date;
 }
 
