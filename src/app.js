@@ -63,7 +63,7 @@ function onMessageArrived(message) {
     try {
         var json = $.parseJSON(message.payloadString);
         if (json.type.localeCompare("heartbeat") == 0) {
-            var date = convertTime(json.time);
+            var date = convertTime(json.time * 1000);
             lastHeartbeat = date;
             var msg = "Heartbeat at " + formatedDate(date);
             console.log(msg);
