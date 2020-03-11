@@ -70,12 +70,12 @@ function onMessageArrived(message) {
         }
         if (json.type.localeCompare("access") == 0) {
             if (json.isKnow) {
-                var date = convertTime(json.time);
+                var date = convertTime(json.time * 1000);
                 var msg = "Known access at " + formatedDate(date);
                 console.log(msg);
                 createRowOn("denied_list", msg);
             } else {
-                var date = convertTime(json.time);
+                var date = convertTime(json.time * 1000);
                 var msg = "Denied access at " + formatedDate(date);
                 console.log(msg);
                 createRowOn("allowed_list", msg);
